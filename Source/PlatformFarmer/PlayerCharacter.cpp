@@ -22,6 +22,8 @@ void APlayerCharacter::BeginPlay()
 			Subsystem->AddMappingContext(IMC, 0);
 		}
 	}
+
+	OnUseOverrideEndDelegate.BindUObject(this, &APlayerCharacter::OnUseOverrideAnimEnd);
 }
 
 void APlayerCharacter::Tick(float DeltaTime)
@@ -39,6 +41,9 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &APlayerCharacter::JumpStarted);
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &APlayerCharacter::JumpEnded);
+
+		EnhancedInputComponent->BindAction(SwitchToolsAction, ETriggerEvent::Started, this, &APlayerCharacter::SwitchTools);
+		EnhancedInputComponent->BindAction(UseToolAction, ETriggerEvent::Started, this, &APlayerCharacter::UseTool);
 	}
 }
 
@@ -47,19 +52,75 @@ void APlayerCharacter::Move(const FInputActionValue& Value)
 {
 	float MoveActionValue = Value.Get<float>();
 
-	FVector Direction = FVector(1.0f, 0.0f, 0.0f);
-	AddMovementInput(Direction, MoveActionValue);
-	UpdateDirection(MoveActionValue);
+	if (IsAlive && CanMove)
+	{
+		FVector Direction = FVector(1.0f, 0.0f, 0.0f);
+		AddMovementInput(Direction, MoveActionValue);
+		UpdateDirection(MoveActionValue);
+	}
+	
 }
 
 void APlayerCharacter::JumpStarted(const FInputActionValue& Value)
 {
-	Jump();
+	if(IsAlive && CanMove) Jump();
 }
 
 void APlayerCharacter::JumpEnded(const FInputActionValue& Value)
 {
 	StopJumping();
+}
+
+void APlayerCharacter::SwitchTools(const FInputActionValue& Value)
+{
+	int MoveActionValue = Value.Get<float>();
+	int NextTool = ((int)CurrentTool + MoveActionValue + (int)Tools::COUNT) % (int)Tools::COUNT;
+	CurrentTool = (Tools)NextTool;
+}
+
+void APlayerCharacter::UseTool(const FInputActionValue& Value)
+{
+	UPaperZDAnimSequence* AnimToPlay;
+
+	if (IsAlive && CanUse)
+	{
+		CanUse = false;
+		CanMove = false;
+
+		switch (CurrentTool)
+		{
+		case Tools::Axe:
+			AnimToPlay = AxeAnimSequence;
+			break;
+		case Tools::Hoe:
+			AnimToPlay = HoeAnimSequence;
+			break;
+		case Tools::Seeds:
+			AnimToPlay = UseAnimSequence;
+			break;
+		case Tools::Sword:
+			AnimToPlay = SwordAnimSequence;
+			break;
+		case Tools::Water:
+			AnimToPlay = WaterAnimSequence;
+			break;
+		default:
+			AnimToPlay = AxeAnimSequence;
+		}
+
+		GetAnimInstance()->PlayAnimationOverride(AnimToPlay, FName("DefaultSlot"), 1.0f, 0.0f, OnUseOverrideEndDelegate);
+	}
+	
+	//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::Printf(TEXT("Using tool: %s"), *UEnum::GetValueAsString(CurrentTool)));
+}
+
+void APlayerCharacter::OnUseOverrideAnimEnd(bool Completed)
+{
+	if (IsAlive)
+	{
+		CanMove = true;
+		CanUse = true;
+	}
 }
 
 void APlayerCharacter::UpdateDirection(float MoveDirection)

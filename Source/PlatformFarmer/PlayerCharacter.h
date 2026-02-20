@@ -14,7 +14,20 @@
 
 #include "Kismet/GameplayStatics.h"
 
+#include "PaperZDAnimInstance.h"
+
 #include "PlayerCharacter.generated.h"
+
+UENUM(BlueprintType)
+enum class Tools : uint8
+{
+	Axe,
+	Hoe,
+	Seeds,
+	Sword,
+	Water,
+	COUNT
+};
 
 UCLASS()
 class PLATFORMFARMER_API APlayerCharacter : public APaperZDCharacter
@@ -33,6 +46,29 @@ public:
 	UInputAction* MoveAction;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	UInputAction* JumpAction;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UInputAction* SwitchToolsAction;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UInputAction* UseToolAction;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	Tools CurrentTool = Tools::Axe;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPaperZDAnimSequence* AxeAnimSequence;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPaperZDAnimSequence* HoeAnimSequence;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPaperZDAnimSequence* UseAnimSequence;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPaperZDAnimSequence* SwordAnimSequence;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPaperZDAnimSequence* WaterAnimSequence;
+
+	bool IsAlive = true;
+	bool CanMove = true;
+	bool CanUse = true;
+
+	FZDOnAnimationOverrideEndSignature OnUseOverrideEndDelegate;
 
 	APlayerCharacter();
 	virtual void BeginPlay() override;
@@ -43,4 +79,8 @@ public:
 	void Move(const FInputActionValue& Value);
 	void JumpStarted(const FInputActionValue& Value);
 	void JumpEnded(const FInputActionValue& Value);
+	void SwitchTools(const FInputActionValue& Value);
+	void UseTool(const FInputActionValue& Value);
+
+	void OnUseOverrideAnimEnd(bool Completed);
 };
