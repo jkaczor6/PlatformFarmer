@@ -100,6 +100,8 @@ public:
 	void SwitchTools(const FInputActionValue& Value);
 	void SwitchSeeds(const FInputActionValue& Value);
 	void UseTool(const FInputActionValue& Value);
+
+	UFUNCTION()
 	void Attack(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 	void OnUseOverrideAnimEnd(bool Completed);

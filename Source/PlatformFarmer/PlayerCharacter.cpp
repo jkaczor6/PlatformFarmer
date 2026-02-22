@@ -31,8 +31,6 @@ void APlayerCharacter::BeginPlay()
 	OnUseOverrideEndDelegate.BindUObject(this, &APlayerCharacter::OnUseOverrideAnimEnd);
 
 	HitBox->OnComponentBeginOverlap.AddDynamic(this, &APlayerCharacter::Attack);
-	HitBox->SetActive(false);
-	HitBox->SetHiddenInGame(true);
 }
 
 void APlayerCharacter::Tick(float DeltaTime)
@@ -118,8 +116,7 @@ void APlayerCharacter::UseTool(const FInputActionValue& Value)
 			break;
 		case Tools::Sword:
 			AnimToPlay = SwordAnimSequence;
-			HitBox->SetActive(true);
-			HitBox->SetHiddenInGame(false);
+			HitBox->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
 			break;
 		case Tools::Water:
 			AnimToPlay = WaterAnimSequence;
@@ -136,7 +133,11 @@ void APlayerCharacter::UseTool(const FInputActionValue& Value)
 
 void APlayerCharacter::Attack(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::Printf(TEXT("Attacking enemy: %s"), *OtherActor->GetActorNameOrLabel()));
+	ASlime* Slime = Cast<ASlime>(OtherActor);
+	if (Slime)
+	{
+		Slime->Destroy();
+	}
 }
 
 void APlayerCharacter::OnUseOverrideAnimEnd(bool Completed)
@@ -146,10 +147,10 @@ void APlayerCharacter::OnUseOverrideAnimEnd(bool Completed)
 		CanMove = true;
 		CanUse = true;
 	}
-	if (HitBox->IsActive())
+	ECollisionResponse ECR = HitBox->GetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn);
+	if (ECR == ECollisionResponse::ECR_Overlap)
 	{
-		HitBox->SetActive(false);
-		HitBox->SetHiddenInGame(true);
+		HitBox->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
 	}
 }
 
