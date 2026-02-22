@@ -39,6 +39,7 @@ enum class Seeds : uint8
 	COUNT
 };
 
+#define ECC_Tree ECC_GameTraceChannel1
 
 UCLASS()
 class PLATFORMFARMER_API APlayerCharacter : public APaperZDCharacter

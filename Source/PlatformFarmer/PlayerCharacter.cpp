@@ -1,6 +1,7 @@
 #include "PlayerCharacter.h"
 
 #include "Slime.h"
+#include "Tree.h"
 
 APlayerCharacter::APlayerCharacter()
 {
@@ -107,6 +108,7 @@ void APlayerCharacter::UseTool(const FInputActionValue& Value)
 		{
 		case Tools::Axe:
 			AnimToPlay = AxeAnimSequence;
+			HitBox->SetCollisionResponseToChannel(ECC_Tree, ECollisionResponse::ECR_Overlap);
 			break;
 		case Tools::Hoe:
 			AnimToPlay = HoeAnimSequence;
@@ -128,15 +130,22 @@ void APlayerCharacter::UseTool(const FInputActionValue& Value)
 		GetAnimInstance()->PlayAnimationOverride(AnimToPlay, FName("DefaultSlot"), 1.0f, 0.0f, OnUseOverrideEndDelegate);
 	}
 	
-	//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::Printf(TEXT("Using tool: %s"), *UEnum::GetValueAsString(CurrentTool)));
 }
 
 void APlayerCharacter::Attack(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	//GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, FString::Printf(TEXT("%s"), *OtherActor->GetActorNameOrLabel()));
 	ASlime* Slime = Cast<ASlime>(OtherActor);
 	if (Slime)
 	{
 		Slime->Destroy();
+	}
+	ATree* Tree = Cast<ATree>(OtherActor);
+	if (Tree)
+	{
+		Tree->TreeSprite->SetVisibility(false);
+		Tree->StumpSprite->SetVisibility(true);
+		Tree->BoxComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	}
 }
 
@@ -147,11 +156,9 @@ void APlayerCharacter::OnUseOverrideAnimEnd(bool Completed)
 		CanMove = true;
 		CanUse = true;
 	}
-	ECollisionResponse ECR = HitBox->GetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn);
-	if (ECR == ECollisionResponse::ECR_Overlap)
-	{
-		HitBox->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
-	}
+	
+	HitBox->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
+	HitBox->SetCollisionResponseToChannel(ECC_Tree, ECollisionResponse::ECR_Ignore);
 }
 
 void APlayerCharacter::UpdateDirection(float MoveDirection)
