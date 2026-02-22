@@ -11,6 +11,7 @@
 #include "Components/InputComponent.h"
 #include "InputActionValue.h"
 #include "GameFramework/Controller.h"
+#include "Components/BoxComponent.h"
 
 #include "Kismet/GameplayStatics.h"
 
@@ -28,6 +29,16 @@ enum class Tools : uint8
 	Water,
 	COUNT
 };
+UENUM(BlueprintType)
+enum class Seeds : uint8
+{
+	Carrot,
+	Pumpkin,
+	Tomato,
+	Wheat,
+	COUNT
+};
+
 
 UCLASS()
 class PLATFORMFARMER_API APlayerCharacter : public APaperZDCharacter
@@ -40,6 +51,8 @@ public:
 	USpringArmComponent* SpringArm;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	UCameraComponent* Camera;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	UBoxComponent* HitBox;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	UInputMappingContext* IMC;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
@@ -49,9 +62,14 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	UInputAction* SwitchToolsAction;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UInputAction* SwitchSeedsAction;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	UInputAction* UseToolAction;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	Tools CurrentTool = Tools::Axe;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	Seeds CurrentSeed = Seeds::Carrot;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	UPaperZDAnimSequence* AxeAnimSequence;
@@ -80,7 +98,9 @@ public:
 	void JumpStarted(const FInputActionValue& Value);
 	void JumpEnded(const FInputActionValue& Value);
 	void SwitchTools(const FInputActionValue& Value);
+	void SwitchSeeds(const FInputActionValue& Value);
 	void UseTool(const FInputActionValue& Value);
+	void Attack(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 	void OnUseOverrideAnimEnd(bool Completed);
 };

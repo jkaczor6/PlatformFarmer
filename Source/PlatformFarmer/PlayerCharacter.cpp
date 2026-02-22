@@ -1,5 +1,7 @@
 #include "PlayerCharacter.h"
 
+#include "Slime.h"
+
 APlayerCharacter::APlayerCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -9,6 +11,9 @@ APlayerCharacter::APlayerCharacter()
 
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(SpringArm, USpringArmComponent::SocketName);
+
+	HitBox = CreateDefaultSubobject<UBoxComponent>(TEXT("HitBox"));
+	HitBox->SetupAttachment(RootComponent);
 }
 
 void APlayerCharacter::BeginPlay()
@@ -24,6 +29,10 @@ void APlayerCharacter::BeginPlay()
 	}
 
 	OnUseOverrideEndDelegate.BindUObject(this, &APlayerCharacter::OnUseOverrideAnimEnd);
+
+	HitBox->OnComponentBeginOverlap.AddDynamic(this, &APlayerCharacter::Attack);
+	HitBox->SetActive(false);
+	HitBox->SetHiddenInGame(true);
 }
 
 void APlayerCharacter::Tick(float DeltaTime)
@@ -43,6 +52,7 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &APlayerCharacter::JumpEnded);
 
 		EnhancedInputComponent->BindAction(SwitchToolsAction, ETriggerEvent::Started, this, &APlayerCharacter::SwitchTools);
+		EnhancedInputComponent->BindAction(SwitchSeedsAction, ETriggerEvent::Started, this, &APlayerCharacter::SwitchSeeds);
 		EnhancedInputComponent->BindAction(UseToolAction, ETriggerEvent::Started, this, &APlayerCharacter::UseTool);
 	}
 }
@@ -78,6 +88,14 @@ void APlayerCharacter::SwitchTools(const FInputActionValue& Value)
 	CurrentTool = (Tools)NextTool;
 }
 
+void APlayerCharacter::SwitchSeeds(const FInputActionValue& Value)
+{
+	int MoveActionValue = Value.Get<float>();
+	int NextSeed = ((int)CurrentSeed + MoveActionValue + (int)Seeds::COUNT) % (int)Seeds::COUNT;
+	CurrentSeed = (Seeds)NextSeed;
+	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Cyan, FString::Printf(TEXT("CurrentSeed: %s"), *UEnum::GetValueAsString(CurrentSeed)));
+}
+
 void APlayerCharacter::UseTool(const FInputActionValue& Value)
 {
 	UPaperZDAnimSequence* AnimToPlay;
@@ -100,6 +118,8 @@ void APlayerCharacter::UseTool(const FInputActionValue& Value)
 			break;
 		case Tools::Sword:
 			AnimToPlay = SwordAnimSequence;
+			HitBox->SetActive(true);
+			HitBox->SetHiddenInGame(false);
 			break;
 		case Tools::Water:
 			AnimToPlay = WaterAnimSequence;
@@ -114,12 +134,22 @@ void APlayerCharacter::UseTool(const FInputActionValue& Value)
 	//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::Printf(TEXT("Using tool: %s"), *UEnum::GetValueAsString(CurrentTool)));
 }
 
+void APlayerCharacter::Attack(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::Printf(TEXT("Attacking enemy: %s"), *OtherActor->GetActorNameOrLabel()));
+}
+
 void APlayerCharacter::OnUseOverrideAnimEnd(bool Completed)
 {
 	if (IsAlive)
 	{
 		CanMove = true;
 		CanUse = true;
+	}
+	if (HitBox->IsActive())
+	{
+		HitBox->SetActive(false);
+		HitBox->SetHiddenInGame(true);
 	}
 }
 
