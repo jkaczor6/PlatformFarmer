@@ -194,7 +194,19 @@ void APlayerCharacter::UseHoe()
 {
 	FVector2D Tile = GetTile();
 
-	ChangeTile(Tile.X, Tile.Y, GroundTileSet, 49, 2);
+	FPaperTileInfo TileToBeHoed = TileMapActor->GetRenderComponent()->GetTile(Tile.X, Tile.Y, 2);
+	if (TileToBeHoed.PackedTileIndex == 0)
+	{
+		ChangeTile(Tile.X, Tile.Y, GroundTileSet, 48, 2);
+	}
+	else if (TileToBeHoed.PackedTileIndex == 1)
+	{
+		ChangeTile(Tile.X, Tile.Y, GroundTileSet, 49, 2);
+	}
+	else if (TileToBeHoed.PackedTileIndex == 2)
+	{
+		ChangeTile(Tile.X, Tile.Y, GroundTileSet, 50, 2);
+	}
 }
 
 void APlayerCharacter::UseWater()
@@ -204,9 +216,17 @@ void APlayerCharacter::UseWater()
 	TileInfo.TileSet = GroundTileSet;
 	
 	FPaperTileInfo TileToBeWatered = TileMapActor->GetRenderComponent()->GetTile(Tile.X, Tile.Y, 2);
-	if (TileToBeWatered.PackedTileIndex == 49)
+	if (TileToBeWatered.PackedTileIndex == 48)
+	{
+		ChangeTile(Tile.X, Tile.Y, WaterTileSet, 0, 1);
+	}
+	else if (TileToBeWatered.PackedTileIndex == 49)
 	{
 		ChangeTile(Tile.X, Tile.Y, WaterTileSet, 1, 1);
+	}
+	else if (TileToBeWatered.PackedTileIndex == 50)
+	{
+		ChangeTile(Tile.X, Tile.Y, WaterTileSet, 2, 1);
 	}
 }
 
