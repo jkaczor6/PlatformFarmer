@@ -32,6 +32,13 @@ void APlayerCharacter::BeginPlay()
 	OnUseOverrideEndDelegate.BindUObject(this, &APlayerCharacter::OnUseOverrideAnimEnd);
 
 	HitBox->OnComponentBeginOverlap.AddDynamic(this, &APlayerCharacter::Attack);
+
+	TileMapActor = Cast<APaperTileMapActor>(UGameplayStatics::GetActorOfClass(GetWorld(), APaperTileMapActor::StaticClass()));
+
+	if (TileMapActor)
+	{
+		TileMapActor->GetRenderComponent()->MakeTileMapEditable();
+	}
 }
 
 void APlayerCharacter::Tick(float DeltaTime)
@@ -85,6 +92,7 @@ void APlayerCharacter::SwitchTools(const FInputActionValue& Value)
 	int MoveActionValue = Value.Get<float>();
 	int NextTool = ((int)CurrentTool + MoveActionValue + (int)Tools::COUNT) % (int)Tools::COUNT;
 	CurrentTool = (Tools)NextTool;
+	GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, FString::Printf(TEXT("Current Tool: %s"), *UEnum::GetValueAsString(CurrentTool)));
 }
 
 void APlayerCharacter::SwitchSeeds(const FInputActionValue& Value)
@@ -112,6 +120,7 @@ void APlayerCharacter::UseTool(const FInputActionValue& Value)
 			break;
 		case Tools::Hoe:
 			AnimToPlay = HoeAnimSequence;
+			UseHoe();
 			break;
 		case Tools::Seeds:
 			AnimToPlay = UseAnimSequence;
@@ -122,6 +131,7 @@ void APlayerCharacter::UseTool(const FInputActionValue& Value)
 			break;
 		case Tools::Water:
 			AnimToPlay = WaterAnimSequence;
+			UseWater();
 			break;
 		default:
 			AnimToPlay = AxeAnimSequence;
@@ -161,9 +171,61 @@ void APlayerCharacter::OnUseOverrideAnimEnd(bool Completed)
 	HitBox->SetCollisionResponseToChannel(ECC_Tree, ECollisionResponse::ECR_Ignore);
 }
 
+FVector2D APlayerCharacter::GetTile()
+{
+	int32 OutTileX;
+	int32 OutTileY;
+	TileMap->GetTileCoordinatesFromLocalSpacePosition(FVector(GetActorLocation().X, 0.0f, GetActorLocation().Z), OutTileX, OutTileY);
+	if (CurrentRotation.Yaw == 180.0f)
+	{
+		OutTileX -= 1;
+	}
+	else if (CurrentRotation.Yaw == 0.0f)
+	{
+		OutTileX += 1;
+	}
+	OutTileY += 1;
+	
+	FVector2D Tile = FVector2D(OutTileX, OutTileY);
+	return Tile;
+}
+
+void APlayerCharacter::UseHoe()
+{
+	FVector2D Tile = GetTile();
+
+	ChangeTile(Tile.X, Tile.Y, GroundTileSet, 49, 2);
+}
+
+void APlayerCharacter::UseWater()
+{
+	FVector2D Tile = GetTile();
+	FPaperTileInfo TileInfo;
+	TileInfo.TileSet = GroundTileSet;
+	
+	FPaperTileInfo TileToBeWatered = TileMapActor->GetRenderComponent()->GetTile(Tile.X, Tile.Y, 2);
+	if (TileToBeWatered.PackedTileIndex == 49)
+	{
+		ChangeTile(Tile.X, Tile.Y, WaterTileSet, 1, 1);
+	}
+}
+
+void APlayerCharacter::ChangeTile(int32 X, int32 Y, UPaperTileSet* CorrectTileSet, int32 NewTileIndex, int32 LayerIndex)
+{
+	UPaperTileMapComponent* TileMapComponent = TileMapActor->GetRenderComponent();
+	if (!TileMapComponent) return;
+
+	FPaperTileInfo NewTile;
+	NewTile.TileSet = CorrectTileSet;
+	NewTile.PackedTileIndex = NewTileIndex;
+
+	TileMapComponent->SetTile(X, Y, LayerIndex, NewTile);
+	TileMapComponent->RebuildCollision();
+}
+
 void APlayerCharacter::UpdateDirection(float MoveDirection)
 {
-	FRotator CurrentRotation = Controller->GetControlRotation();
+	CurrentRotation = Controller->GetControlRotation();
 
 	if (MoveDirection < 0.0f)
 	{

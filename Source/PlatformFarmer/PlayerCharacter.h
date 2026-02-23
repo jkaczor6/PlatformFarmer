@@ -12,6 +12,11 @@
 #include "InputActionValue.h"
 #include "GameFramework/Controller.h"
 #include "Components/BoxComponent.h"
+#include "PaperTileMap.h"
+#include "PaperTileMapActor.h"
+#include "PaperTileMapComponent.h"
+#include "PaperTileLayer.h"
+#include "PaperTileSet.h"
 
 #include "Kismet/GameplayStatics.h"
 
@@ -66,6 +71,15 @@ public:
 	UInputAction* SwitchSeedsAction;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	UInputAction* UseToolAction;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPaperTileMap* TileMap;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPaperTileSet* GroundTileSet;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPaperTileSet* WaterTileSet;
+
+	UPROPERTY(EditAnywhere)
+	APaperTileMapActor* TileMapActor;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	Tools CurrentTool = Tools::Axe;
@@ -88,6 +102,7 @@ public:
 	bool CanUse = true;
 
 	FZDOnAnimationOverrideEndSignature OnUseOverrideEndDelegate;
+	FRotator CurrentRotation;
 
 	APlayerCharacter();
 	virtual void BeginPlay() override;
@@ -106,4 +121,8 @@ public:
 	void Attack(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 	void OnUseOverrideAnimEnd(bool Completed);
+	FVector2D GetTile();
+	void UseHoe();
+	void UseWater();
+	void ChangeTile(int32 X, int32 Y, UPaperTileSet* CorrectTileSet, int32 NewTileIndex, int32 LayerIndex);
 };
