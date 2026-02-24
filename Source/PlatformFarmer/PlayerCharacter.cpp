@@ -90,16 +90,16 @@ void APlayerCharacter::JumpEnded(const FInputActionValue& Value)
 void APlayerCharacter::SwitchTools(const FInputActionValue& Value)
 {
 	int MoveActionValue = Value.Get<float>();
-	int NextTool = ((int)CurrentTool + MoveActionValue + (int)Tools::COUNT) % (int)Tools::COUNT;
-	CurrentTool = (Tools)NextTool;
+	int NextTool = ((int)CurrentTool + MoveActionValue + (int)ETools::COUNT) % (int)ETools::COUNT;
+	CurrentTool = (ETools)NextTool;
 	GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, FString::Printf(TEXT("Current Tool: %s"), *UEnum::GetValueAsString(CurrentTool)));
 }
 
 void APlayerCharacter::SwitchSeeds(const FInputActionValue& Value)
 {
 	int MoveActionValue = Value.Get<float>();
-	int NextSeed = ((int)CurrentSeed + MoveActionValue + (int)Seeds::COUNT) % (int)Seeds::COUNT;
-	CurrentSeed = (Seeds)NextSeed;
+	int NextSeed = ((int)CurrentSeed + MoveActionValue + (int)ESeeds::COUNT) % (int)ESeeds::COUNT;
+	CurrentSeed = (ESeeds)NextSeed;
 	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Cyan, FString::Printf(TEXT("CurrentSeed: %s"), *UEnum::GetValueAsString(CurrentSeed)));
 }
 
@@ -114,22 +114,23 @@ void APlayerCharacter::UseTool(const FInputActionValue& Value)
 
 		switch (CurrentTool)
 		{
-		case Tools::Axe:
+		case ETools::Axe:
 			AnimToPlay = AxeAnimSequence;
 			HitBox->SetCollisionResponseToChannel(ECC_Tree, ECollisionResponse::ECR_Overlap);
 			break;
-		case Tools::Hoe:
+		case ETools::Hoe:
 			AnimToPlay = HoeAnimSequence;
 			UseHoe();
 			break;
-		case Tools::Seeds:
+		case ETools::Seeds:
 			AnimToPlay = UseAnimSequence;
+			UseSeed();
 			break;
-		case Tools::Sword:
+		case ETools::Sword:
 			AnimToPlay = SwordAnimSequence;
 			HitBox->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
 			break;
-		case Tools::Water:
+		case ETools::Water:
 			AnimToPlay = WaterAnimSequence;
 			UseWater();
 			break;
@@ -227,6 +228,34 @@ void APlayerCharacter::UseWater()
 	else if (TileToBeWatered.PackedTileIndex == 50)
 	{
 		ChangeTile(Tile.X, Tile.Y, WaterTileSet, 2, 1);
+	}
+}
+
+void APlayerCharacter::UseSeed()
+{
+	FVector2D Tile = GetTile();
+
+	FPaperTileInfo TileToPlantOn = TileMapActor->GetRenderComponent()->GetTile(Tile.X, Tile.Y, 2);
+	if (TileToPlantOn.PackedTileIndex != 49) return;
+	if (!PlantClasses.Contains(CurrentSeed)) return;
+
+	UPaperTileMapComponent* TileMapComp = TileMapActor->GetRenderComponent();
+
+	FVector WorldLocation = TileMapComp->GetTileCenterPosition(Tile.X, Tile.Y, 2, true);
+	FVector SpawnLocation = FVector(WorldLocation.X, 0.0f, WorldLocation.Z + 12);
+	FActorSpawnParameters SpawnInfo;
+	SpawnInfo.Owner = this;
+
+	TSubclassOf<APlant> PlantToSpawn = PlantClasses[CurrentSeed];
+	FIntPoint PlantedTile = FIntPoint(Tile.X, Tile.Y);
+	if (PlantedTiles.Contains(PlantedTile)) return;
+
+	APlant* Plant = GetWorld()->SpawnActor<APlant>(PlantToSpawn, SpawnLocation, FRotator::ZeroRotator, SpawnInfo);
+	PlantedTiles.Add(PlantedTile, Plant);
+
+	if (Plant)
+	{
+		Plant->SetupPlant(CurrentSeed);
 	}
 }
 

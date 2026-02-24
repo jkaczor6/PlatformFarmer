@@ -3,6 +3,9 @@
 #include "CoreMinimal.h"
 #include "PaperZDCharacter.h"
 
+#include "Enums.h"
+#include "Plant.h"
+
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 
@@ -23,26 +26,6 @@
 #include "PaperZDAnimInstance.h"
 
 #include "PlayerCharacter.generated.h"
-
-UENUM(BlueprintType)
-enum class Tools : uint8
-{
-	Axe,
-	Hoe,
-	Seeds,
-	Sword,
-	Water,
-	COUNT
-};
-UENUM(BlueprintType)
-enum class Seeds : uint8
-{
-	Carrot,
-	Pumpkin,
-	Tomato,
-	Wheat,
-	COUNT
-};
 
 #define ECC_Tree ECC_GameTraceChannel1
 
@@ -82,9 +65,13 @@ public:
 	APaperTileMapActor* TileMapActor;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	Tools CurrentTool = Tools::Axe;
+	ETools CurrentTool = ETools::Axe;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	Seeds CurrentSeed = Seeds::Carrot;
+	ESeeds CurrentSeed = ESeeds::Carrot;
+
+	UPROPERTY(EditDefaultsOnly)
+	TMap<ESeeds, TSubclassOf<APlant>> PlantClasses;
+	TMap<FIntPoint, APlant*> PlantedTiles;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	UPaperZDAnimSequence* AxeAnimSequence;
@@ -124,5 +111,6 @@ public:
 	FVector2D GetTile();
 	void UseHoe();
 	void UseWater();
+	void UseSeed();
 	void ChangeTile(int32 X, int32 Y, UPaperTileSet* CorrectTileSet, int32 NewTileIndex, int32 LayerIndex);
 };
