@@ -33,7 +33,6 @@ void ABed::OnComponentOverlapBegin(UPrimitiveComponent* OverlappedComponent, AAc
 {
 	InteractKeySprite->SetVisibility(true);
 
-	//GM->Sleep();
 }
 
 void ABed::OnComponentOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
