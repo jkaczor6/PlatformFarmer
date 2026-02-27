@@ -21,6 +21,8 @@
 #include "PaperTileLayer.h"
 #include "PaperTileSet.h"
 
+#include "DayNightWidget.h"
+
 #include "Kismet/GameplayStatics.h"
 
 #include "PaperZDAnimInstance.h"
@@ -72,6 +74,11 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 	TMap<ESeeds, TSubclassOf<APlant>> PlantClasses;
 	TMap<FIntPoint, APlant*> PlantedTiles;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UDayNightWidget* DayNightWidget;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TSubclassOf<UDayNightWidget> DayNightWidgetClass;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	UPaperZDAnimSequence* AxeAnimSequence;

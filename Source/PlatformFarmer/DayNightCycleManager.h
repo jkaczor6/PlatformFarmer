@@ -5,7 +5,9 @@
 
 #include "Curves/CurveFloat.h"
 #include "Blueprint/UserWidget.h"
-#include "DayNightWidget.h"
+
+#include "Engine/TimerHandle.h"
+#include "Kismet/GameplayStatics.h"
 
 #include "DayNightCycleManager.generated.h"
 
@@ -19,15 +21,22 @@ public:
 
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
+	void OnDayPassTimerTimeout();
+	void OnHourPassTimerTimeout();
+	void OnDayEndTimerTimeout();
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	float DayLength = 300.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	UCurveFloat* DayNightCurve;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	UDayNightWidget* DayNightWidget;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	TSubclassOf<UDayNightWidget> DayNightWidgetClass;
+	float DayEndDelay = 30.0f;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	int CurrentHour = 6;
 
-	float CurrentTime = 0.0f;
+	FTimerHandle DayPassTimer;
+	FTimerHandle HourPassTimer;
+	FTimerHandle DayEndTimer;
+
+	
 };

@@ -10,36 +10,33 @@ void ADayNightCycleManager::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	DayNightWidget = CreateWidget<UDayNightWidget>(GetWorld(), DayNightWidgetClass);
+	float HourPassTimerDelay = DayLength / 18;
 
-	if (DayNightWidget)
-	{
-		DayNightWidget->AddToViewport();
-	}
+	GetWorldTimerManager().SetTimer(HourPassTimer, this, &ADayNightCycleManager::OnHourPassTimerTimeout, HourPassTimerDelay, true, HourPassTimerDelay);
+	GetWorldTimerManager().SetTimer(DayPassTimer, this, &ADayNightCycleManager::OnDayPassTimerTimeout, 1.0f, false, DayLength);
 }
 
 void ADayNightCycleManager::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	CurrentTime += DeltaTime;
+}
 
-	if (CurrentTime > DayLength)
-	{
-		CurrentTime = 0.0f;
-	}
+void ADayNightCycleManager::OnDayPassTimerTimeout()
+{
+	GetWorldTimerManager().ClearTimer(HourPassTimer);
+	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::Printf(TEXT("Day ended")));
+	GetWorldTimerManager().SetTimer(DayEndTimer, this, &ADayNightCycleManager::OnDayEndTimerTimeout, 1.0f, false, DayEndDelay);
+}
 
-	float TimePercent = CurrentTime / DayLength;
+void ADayNightCycleManager::OnHourPassTimerTimeout()
+{
+	CurrentHour++;
+	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::Printf(TEXT("CurrentHour: %d"), CurrentHour));
+}
 
-	if (DayNightCurve)
-	{
-		float CurveValue = DayNightCurve->GetFloatValue(TimePercent);
-
-		if (DayNightWidget)
-		{
-			DayNightWidget->UpdateNightAlpha(CurveValue);
-		}
-		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, FString::Printf(TEXT("CurveValue: %f"), CurveValue));
-	}
+void ADayNightCycleManager::OnDayEndTimerTimeout()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::Printf(TEXT("Sleeping")));
 }
 
