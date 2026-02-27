@@ -10,10 +10,7 @@ void ADayNightCycleManager::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	float HourPassTimerDelay = DayLength / 18;
-
-	GetWorldTimerManager().SetTimer(HourPassTimer, this, &ADayNightCycleManager::OnHourPassTimerTimeout, HourPassTimerDelay, true, HourPassTimerDelay);
-	GetWorldTimerManager().SetTimer(DayPassTimer, this, &ADayNightCycleManager::OnDayPassTimerTimeout, 1.0f, false, DayLength);
+	Sleep();
 
 	if (DayNightWidgetClass)
 	{
@@ -43,7 +40,15 @@ void ADayNightCycleManager::Tick(float DeltaTime)
 
 		if (DayNightCurve)
 		{
-			float CurveValue = DayNightCurve->GetFloatValue(TimePercent);
+			float CurveValue;
+			if (DayNightCurve->GetFloatValue(TimePercent) < 0.7f)
+			{
+				CurveValue = DayNightCurve->GetFloatValue(TimePercent);
+			}
+			else
+			{
+				CurveValue = 0.7f;
+			}
 
 			DayNightWidget->UpdateNightAlpha(CurveValue);
 		}
@@ -53,9 +58,7 @@ void ADayNightCycleManager::Tick(float DeltaTime)
 void ADayNightCycleManager::OnDayPassTimerTimeout()
 {
 	GetWorldTimerManager().ClearTimer(HourPassTimer);
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::Printf(TEXT("Day ended")));
 	GetWorldTimerManager().SetTimer(DayEndTimer, this, &ADayNightCycleManager::OnDayEndTimerTimeout, 1.0f, false, DayEndDelay);
-	DayNightWidget->UpdateNightAlpha(0.7f);
 }
 
 void ADayNightCycleManager::OnHourPassTimerTimeout()
@@ -66,6 +69,16 @@ void ADayNightCycleManager::OnHourPassTimerTimeout()
 
 void ADayNightCycleManager::OnDayEndTimerTimeout()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::Printf(TEXT("Sleeping")));
+	Sleep();
 }
 
+void ADayNightCycleManager::Sleep() 
+{
+	CurrentHour = 6;
+	CurrentTime = FMath::Fmod(CurrentTime, DayLength);
+	float HourPassTimerDelay = DayLength / 18;
+	GetWorldTimerManager().SetTimer(HourPassTimer, this, &ADayNightCycleManager::OnHourPassTimerTimeout, HourPassTimerDelay, true, HourPassTimerDelay);
+	GetWorldTimerManager().SetTimer(DayPassTimer, this, &ADayNightCycleManager::OnDayPassTimerTimeout, 1.0f, false, DayLength);
+
+	//for each Plant->Grow();
+}

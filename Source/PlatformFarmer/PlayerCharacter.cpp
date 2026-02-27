@@ -34,6 +34,8 @@ void APlayerCharacter::BeginPlay()
 	HitBox->OnComponentBeginOverlap.AddDynamic(this, &APlayerCharacter::Attack);
 
 	TileMapActor = Cast<APaperTileMapActor>(UGameplayStatics::GetActorOfClass(GetWorld(), APaperTileMapActor::StaticClass()));
+	Bed = Cast<ABed>(UGameplayStatics::GetActorOfClass(GetWorld(), ABed::StaticClass()));
+	DayNightCycleManager = Cast<ADayNightCycleManager>(UGameplayStatics::GetActorOfClass(GetWorld(), ADayNightCycleManager::StaticClass()));
 
 	if (TileMapActor)
 	{
@@ -60,6 +62,7 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 		EnhancedInputComponent->BindAction(SwitchToolsAction, ETriggerEvent::Started, this, &APlayerCharacter::SwitchTools);
 		EnhancedInputComponent->BindAction(SwitchSeedsAction, ETriggerEvent::Started, this, &APlayerCharacter::SwitchSeeds);
 		EnhancedInputComponent->BindAction(UseToolAction, ETriggerEvent::Started, this, &APlayerCharacter::UseTool);
+		EnhancedInputComponent->BindAction(UseAction, ETriggerEvent::Started, this, &APlayerCharacter::Use);
 	}
 }
 
@@ -141,6 +144,14 @@ void APlayerCharacter::UseTool(const FInputActionValue& Value)
 		GetAnimInstance()->PlayAnimationOverride(AnimToPlay, FName("DefaultSlot"), 1.0f, 0.0f, OnUseOverrideEndDelegate);
 	}
 	
+}
+
+void APlayerCharacter::Use(const FInputActionValue& Value)
+{
+	if (Bed->PlayerOverlapping)
+	{
+		DayNightCycleManager->Sleep();
+	}
 }
 
 void APlayerCharacter::Attack(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)

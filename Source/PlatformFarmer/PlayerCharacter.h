@@ -5,6 +5,8 @@
 
 #include "Enums.h"
 #include "Plant.h"
+#include "Bed.h"
+#include "DayNightCycleManager.h"
 
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
@@ -56,6 +58,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	UInputAction* UseToolAction;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UInputAction* UseAction;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	UPaperTileMap* TileMap;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	UPaperTileSet* GroundTileSet;
@@ -93,6 +97,8 @@ public:
 
 	FZDOnAnimationOverrideEndSignature OnUseOverrideEndDelegate;
 	FRotator CurrentRotation;
+	ABed* Bed;
+	ADayNightCycleManager* DayNightCycleManager;
 
 	APlayerCharacter();
 	virtual void BeginPlay() override;
@@ -106,6 +112,7 @@ public:
 	void SwitchTools(const FInputActionValue& Value);
 	void SwitchSeeds(const FInputActionValue& Value);
 	void UseTool(const FInputActionValue& Value);
+	void Use(const FInputActionValue& Value);
 
 	UFUNCTION()
 	void Attack(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);

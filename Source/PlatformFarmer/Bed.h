@@ -30,4 +30,6 @@ public:
 	UPaperSpriteComponent* BedSprite;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	UPaperSpriteComponent* InteractKeySprite;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	bool PlayerOverlapping = false;
 };

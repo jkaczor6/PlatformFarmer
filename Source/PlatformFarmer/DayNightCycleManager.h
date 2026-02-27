@@ -26,6 +26,7 @@ public:
 	void OnDayPassTimerTimeout();
 	void OnHourPassTimerTimeout();
 	void OnDayEndTimerTimeout();
+	void Sleep();
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	float DayLength = 300.0f;
