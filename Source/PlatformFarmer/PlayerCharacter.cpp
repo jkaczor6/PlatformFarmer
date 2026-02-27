@@ -39,15 +39,6 @@ void APlayerCharacter::BeginPlay()
 	{
 		TileMapActor->GetRenderComponent()->MakeTileMapEditable();
 	}
-
-	if (DayNightWidgetClass)
-	{
-		DayNightWidget = CreateWidget<UDayNightWidget>(UGameplayStatics::GetPlayerController(GetWorld(), 0), DayNightWidgetClass);
-		if (DayNightWidget)
-		{
-			DayNightWidget->AddToPlayerScreen();
-		}
-	}
 }
 
 void APlayerCharacter::Tick(float DeltaTime)

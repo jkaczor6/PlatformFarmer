@@ -9,6 +9,8 @@
 #include "Engine/TimerHandle.h"
 #include "Kismet/GameplayStatics.h"
 
+#include "DayNightWidget.h"
+
 #include "DayNightCycleManager.generated.h"
 
 UCLASS()
@@ -33,10 +35,14 @@ public:
 	float DayEndDelay = 30.0f;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	int CurrentHour = 6;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TSubclassOf<UDayNightWidget> DayNightWidgetClass;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UDayNightWidget* DayNightWidget;
 
 	FTimerHandle DayPassTimer;
 	FTimerHandle HourPassTimer;
 	FTimerHandle DayEndTimer;
 
-	
+	float CurrentTime;
 };
