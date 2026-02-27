@@ -10,6 +10,7 @@
 #include "Kismet/GameplayStatics.h"
 
 #include "DayNightWidget.h"
+#include "PlayerHUDWidget.h"
 
 #include "DayNightCycleManager.generated.h"
 

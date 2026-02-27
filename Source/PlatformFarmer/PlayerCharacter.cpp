@@ -41,6 +41,12 @@ void APlayerCharacter::BeginPlay()
 	{
 		TileMapActor->GetRenderComponent()->MakeTileMapEditable();
 	}
+
+	PlayerHUDWidget = CreateWidget<UPlayerHUDWidget>(UGameplayStatics::GetPlayerController(GetWorld(), 0), PlayerHUDWidgetClass);
+	if (PlayerHUDWidget)
+	{
+		PlayerHUDWidget->AddToPlayerScreen();
+	}
 }
 
 void APlayerCharacter::Tick(float DeltaTime)
@@ -95,7 +101,7 @@ void APlayerCharacter::SwitchTools(const FInputActionValue& Value)
 	int MoveActionValue = Value.Get<float>();
 	int NextTool = ((int)CurrentTool + MoveActionValue + (int)ETools::COUNT) % (int)ETools::COUNT;
 	CurrentTool = (ETools)NextTool;
-	GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, FString::Printf(TEXT("Current Tool: %s"), *UEnum::GetValueAsString(CurrentTool)));
+	PlayerHUDWidget->SetCurrentToolIcon(ToolIcons[CurrentTool]);
 }
 
 void APlayerCharacter::SwitchSeeds(const FInputActionValue& Value)
@@ -103,7 +109,7 @@ void APlayerCharacter::SwitchSeeds(const FInputActionValue& Value)
 	int MoveActionValue = Value.Get<float>();
 	int NextSeed = ((int)CurrentSeed + MoveActionValue + (int)ESeeds::COUNT) % (int)ESeeds::COUNT;
 	CurrentSeed = (ESeeds)NextSeed;
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Cyan, FString::Printf(TEXT("CurrentSeed: %s"), *UEnum::GetValueAsString(CurrentSeed)));
+	PlayerHUDWidget->SetCurrentSeedIcon(SeedIcons[CurrentSeed]);
 }
 
 void APlayerCharacter::UseTool(const FInputActionValue& Value)

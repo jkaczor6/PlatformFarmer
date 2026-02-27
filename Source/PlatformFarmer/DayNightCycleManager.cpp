@@ -10,7 +10,6 @@ void ADayNightCycleManager::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	Sleep();
 
 	if (DayNightWidgetClass)
 	{
@@ -20,6 +19,7 @@ void ADayNightCycleManager::BeginPlay()
 			DayNightWidget->AddToPlayerScreen();
 		}
 	}
+	Sleep();
 }
 
 void ADayNightCycleManager::Tick(float DeltaTime)
@@ -64,7 +64,7 @@ void ADayNightCycleManager::OnDayPassTimerTimeout()
 void ADayNightCycleManager::OnHourPassTimerTimeout()
 {
 	CurrentHour++;
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::Printf(TEXT("CurrentHour: %d"), CurrentHour));
+	DayNightWidget->SetHourText(CurrentHour);
 }
 
 void ADayNightCycleManager::OnDayEndTimerTimeout()
@@ -75,6 +75,7 @@ void ADayNightCycleManager::OnDayEndTimerTimeout()
 void ADayNightCycleManager::Sleep() 
 {
 	CurrentHour = 6;
+	DayNightWidget->SetHourText(CurrentHour);
 	CurrentTime = FMath::Fmod(CurrentTime, DayLength);
 	float HourPassTimerDelay = DayLength / 18;
 	GetWorldTimerManager().SetTimer(HourPassTimer, this, &ADayNightCycleManager::OnHourPassTimerTimeout, HourPassTimerDelay, true, HourPassTimerDelay);
