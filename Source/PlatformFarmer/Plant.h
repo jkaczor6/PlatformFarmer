@@ -8,6 +8,12 @@
 
 #include "Enums.h"
 
+#include "PaperTileMap.h"
+#include "PaperTileMapActor.h"
+#include "PaperTileMapComponent.h"
+#include "PaperTileLayer.h"
+#include "PaperTileSet.h"
+
 #include "Plant.generated.h"
 
 UCLASS()
@@ -20,25 +26,31 @@ public:
 
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
-
 	void SetupPlant(ESeeds SeedType);
+	void Grow();
+	void CheckIfIsWatered();
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	UCapsuleComponent* CapsuleComp;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	UPaperSpriteComponent* PlantSprite;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	TArray<UPaperSprite*> PlantGrowthSprites;
+	TMap<int32, UPaperSprite*> PlantGrowthSprites;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	int32 GrowthStage;
+	int32 CurrentGrowthStage;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	int32 GrowthSprites;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	int32 GrowthTime;
+	int32 GrowthStages;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	int32 HP = 1;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	ESeeds PlantType;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	EItems Reward;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	bool IsWatered = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "TileMap")
+	UPaperTileMap* TileMap;
+	UPROPERTY(EditAnywhere, Category = "TileMap")
+	APaperTileMapActor* TileMapActor;
 };

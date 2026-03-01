@@ -13,6 +13,7 @@
 #include "PlayerHUDWidget.h"
 #include "Tree.h"
 #include "Slime.h"
+#include "Plant.h"
 
 #include "DayNightCycleManager.generated.h"
 
@@ -50,6 +51,7 @@ public:
 
 	TArray<AActor*> Trees;
 	TArray<AActor*> Slimes;
+	TArray<AActor*> Plants;
 
 	float CurrentTime;
 };

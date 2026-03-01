@@ -231,8 +231,6 @@ void APlayerCharacter::UseHoe()
 void APlayerCharacter::UseWater()
 {
 	FVector2D Tile = GetTile();
-	FPaperTileInfo TileInfo;
-	TileInfo.TileSet = GroundTileSet;
 	
 	FPaperTileInfo TileToBeWatered = TileMapActor->GetRenderComponent()->GetTile(Tile.X, Tile.Y, 2);
 	if (TileToBeWatered.PackedTileIndex == 48)
@@ -255,7 +253,6 @@ void APlayerCharacter::UseSeed()
 
 	FPaperTileInfo TileToPlantOn = TileMapActor->GetRenderComponent()->GetTile(Tile.X, Tile.Y, 2);
 	if (TileToPlantOn.PackedTileIndex != 49) return;
-	if (!PlantClasses.Contains(CurrentSeed)) return;
 
 	UPaperTileMapComponent* TileMapComp = TileMapActor->GetRenderComponent();
 
