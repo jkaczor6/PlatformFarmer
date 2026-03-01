@@ -1,4 +1,5 @@
 #include "Slime.h"
+#include "Kismet/GameplayStatics.h"
 
 ASlime::ASlime()
 {
@@ -9,6 +10,9 @@ ASlime::ASlime()
 
 	LedgeDetector = CreateDefaultSubobject<UBoxComponent>(TEXT("LedgeDetector"));
 	LedgeDetector->SetupAttachment(RootComponent);
+
+	CapsuleComp = FindComponentByClass<UCapsuleComponent>();
+	Flipbook = FindComponentByClass<UPaperFlipbookComponent>();
 }
 
 void ASlime::BeginPlay()
@@ -50,6 +54,20 @@ void ASlime::CheckLedge()
 			UpdateDirection();
 		}
 	}
+}
+
+void ASlime::Die()
+{
+	CapsuleComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	Flipbook->SetVisibility(false);
+	Flipbook->SetActive(false);
+}
+
+void ASlime::Respawn()
+{
+	CapsuleComp->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	Flipbook->SetVisibility(true);
+	Flipbook->SetActive(true);
 }
 
 void ASlime::OverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)

@@ -165,7 +165,7 @@ void APlayerCharacter::Attack(UPrimitiveComponent* OverlappedComponent, AActor* 
 	ASlime* Slime = Cast<ASlime>(OtherActor);
 	if (Slime)
 	{
-		Slime->Destroy();
+		Slime->Die();
 	}
 	ATree* Tree = Cast<ATree>(OtherActor);
 	if (Tree)

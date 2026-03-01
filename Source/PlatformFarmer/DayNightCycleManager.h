@@ -12,6 +12,7 @@
 #include "DayNightWidget.h"
 #include "PlayerHUDWidget.h"
 #include "Tree.h"
+#include "Slime.h"
 
 #include "DayNightCycleManager.generated.h"
 
@@ -48,6 +49,7 @@ public:
 	FTimerHandle DayEndTimer;
 
 	TArray<AActor*> Trees;
+	TArray<AActor*> Slimes;
 
 	float CurrentTime;
 };
