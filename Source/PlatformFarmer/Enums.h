@@ -23,3 +23,13 @@ enum class ESeeds : uint8
 	Wheat,
 	COUNT
 };
+
+UENUM(BlueprintType)
+enum class EItems : uint8
+{
+	Carrot,
+	Pumpkin,
+	Tomato,
+	Wheat,
+	Wood
+};

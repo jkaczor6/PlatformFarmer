@@ -27,6 +27,7 @@
 #include "Engine/Texture2D.h"
 
 #include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetMathLibrary.h"
 
 #include "PaperZDAnimInstance.h"
 
@@ -103,6 +104,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Icons")
 	TMap<ESeeds, UTexture2D*> SeedIcons;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Equipment")
+	TMap<EItems, int32> Materials;
+
 	bool IsAlive = true;
 	bool CanMove = true;
 	bool CanUse = true;
@@ -135,4 +139,5 @@ public:
 	void UseWater();
 	void UseSeed();
 	void ChangeTile(int32 X, int32 Y, UPaperTileSet* CorrectTileSet, int32 NewTileIndex, int32 LayerIndex);
+	void AddToEquipment(EItems Material, int32 Amount);
 };

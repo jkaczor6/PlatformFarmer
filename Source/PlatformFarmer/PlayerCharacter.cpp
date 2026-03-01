@@ -162,7 +162,6 @@ void APlayerCharacter::Use(const FInputActionValue& Value)
 
 void APlayerCharacter::Attack(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	//GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, FString::Printf(TEXT("%s"), *OtherActor->GetActorNameOrLabel()));
 	ASlime* Slime = Cast<ASlime>(OtherActor);
 	if (Slime)
 	{
@@ -174,6 +173,8 @@ void APlayerCharacter::Attack(UPrimitiveComponent* OverlappedComponent, AActor* 
 		Tree->TreeSprite->SetVisibility(false);
 		Tree->StumpSprite->SetVisibility(true);
 		Tree->BoxComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		int32 DroppedWood = UKismetMathLibrary::RandomIntegerInRange(1, 4);
+		AddToEquipment(EItems::Wood, DroppedWood);
 	}
 }
 
@@ -287,6 +288,12 @@ void APlayerCharacter::ChangeTile(int32 X, int32 Y, UPaperTileSet* CorrectTileSe
 
 	TileMapComponent->SetTile(X, Y, LayerIndex, NewTile);
 	TileMapComponent->RebuildCollision();
+}
+
+void APlayerCharacter::AddToEquipment(EItems Material, int32 Amount)
+{
+	Materials[Material] += Amount;
+	PlayerHUDWidget->SetMaterialCount(Material, Amount);
 }
 
 void APlayerCharacter::UpdateDirection(float MoveDirection)
