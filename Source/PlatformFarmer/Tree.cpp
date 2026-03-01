@@ -27,3 +27,10 @@ void ATree::Tick(float DeltaTime)
 
 }
 
+void ATree::Regrow()
+{
+	TreeSprite->SetVisibility(true);
+	StumpSprite->SetVisibility(false);
+	BoxComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+}
+

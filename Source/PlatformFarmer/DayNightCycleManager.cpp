@@ -19,6 +19,7 @@ void ADayNightCycleManager::BeginPlay()
 			DayNightWidget->AddToPlayerScreen();
 		}
 	}
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ATree::StaticClass(), Trees);
 	Sleep();
 }
 
@@ -80,6 +81,15 @@ void ADayNightCycleManager::Sleep()
 	float HourPassTimerDelay = DayLength / 18;
 	GetWorldTimerManager().SetTimer(HourPassTimer, this, &ADayNightCycleManager::OnHourPassTimerTimeout, HourPassTimerDelay, true, HourPassTimerDelay);
 	GetWorldTimerManager().SetTimer(DayPassTimer, this, &ADayNightCycleManager::OnDayPassTimerTimeout, 1.0f, false, DayLength);
+	CurrentTime = 0;
 
+	for (AActor* TreeActor : Trees)
+	{
+		ATree* Tree = Cast<ATree>(TreeActor);
+		if (Tree)
+		{
+			Tree->Regrow();
+		}
+	}
 	//for each Plant->Grow();
 }

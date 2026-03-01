@@ -12,8 +12,7 @@ void UPlayerHUDWidget::SetCurrentSeedIcon(UTexture2D* SeedIcon)
 
 void UPlayerHUDWidget::SetMaterialCount(EItems item, int32 Amount)
 {
-	int32 NewCount = 0;
-	NewCount += Amount;
+	int32 NewCount = Amount;
 	FString Str = FString::Printf(TEXT("%d"), NewCount);
 	switch (item)
 	{

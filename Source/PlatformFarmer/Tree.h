@@ -18,6 +18,7 @@ public:
 	ATree();
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
+	void Regrow();
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	UBoxComponent* BoxComponent;

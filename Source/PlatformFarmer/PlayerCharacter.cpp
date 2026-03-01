@@ -293,7 +293,7 @@ void APlayerCharacter::ChangeTile(int32 X, int32 Y, UPaperTileSet* CorrectTileSe
 void APlayerCharacter::AddToEquipment(EItems Material, int32 Amount)
 {
 	Materials[Material] += Amount;
-	PlayerHUDWidget->SetMaterialCount(Material, Amount);
+	PlayerHUDWidget->SetMaterialCount(Material, Materials[Material]);
 }
 
 void APlayerCharacter::UpdateDirection(float MoveDirection)

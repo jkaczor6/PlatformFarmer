@@ -11,6 +11,7 @@
 
 #include "DayNightWidget.h"
 #include "PlayerHUDWidget.h"
+#include "Tree.h"
 
 #include "DayNightCycleManager.generated.h"
 
@@ -45,6 +46,8 @@ public:
 	FTimerHandle DayPassTimer;
 	FTimerHandle HourPassTimer;
 	FTimerHandle DayEndTimer;
+
+	TArray<AActor*> Trees;
 
 	float CurrentTime;
 };
