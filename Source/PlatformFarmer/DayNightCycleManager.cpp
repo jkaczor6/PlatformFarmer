@@ -1,5 +1,7 @@
 #include "DayNightCycleManager.h"
 
+#include "PlayerCharacter.h"
+
 ADayNightCycleManager::ADayNightCycleManager()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -84,6 +86,7 @@ void ADayNightCycleManager::Sleep()
 	GetWorldTimerManager().SetTimer(HourPassTimer, this, &ADayNightCycleManager::OnHourPassTimerTimeout, HourPassTimerDelay, true, HourPassTimerDelay);
 	GetWorldTimerManager().SetTimer(DayPassTimer, this, &ADayNightCycleManager::OnDayPassTimerTimeout, 1.0f, false, DayLength);
 	CurrentTime = 0;
+	APlayerCharacter* Player = Cast<APlayerCharacter>(UGameplayStatics::GetActorOfClass(GetWorld(), APlayerCharacter::StaticClass()));
 
 	for (AActor* TreeActor : Trees)
 	{
@@ -109,5 +112,9 @@ void ADayNightCycleManager::Sleep()
 		{
 			 Plant->Grow();
 		}
+	}
+	for (FIntPoint WateredTile : Player->WateredTiles)
+	{
+		Player->ChangeTile(WateredTile.X, WateredTile.Y, Player->WaterTileSet, -1, 1);
 	}
 }

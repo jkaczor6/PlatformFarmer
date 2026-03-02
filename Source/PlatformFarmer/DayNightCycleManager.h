@@ -17,6 +17,7 @@
 
 #include "DayNightCycleManager.generated.h"
 
+
 UCLASS()
 class PLATFORMFARMER_API ADayNightCycleManager : public AActor
 {

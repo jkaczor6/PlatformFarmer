@@ -73,6 +73,10 @@ void APlant::CheckIfIsWatered()
 	{
 		IsWatered = true;
 	}
+	else
+	{
+		IsWatered = false;
+	}
 }
 
 void APlant::Grow()
@@ -90,5 +94,13 @@ void APlant::Grow()
 		{
 			CurrentGrowthStage = GrowthStages;
 		}
+	}
+	else
+	{
+		DeathCount++;
+	}
+	if (DeathCount >= 3)
+	{
+		Destroy();
 	}
 }

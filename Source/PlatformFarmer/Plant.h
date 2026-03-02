@@ -49,6 +49,8 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	bool IsWatered = false;
 
+	int32 DeathCount = 0;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "TileMap")
 	UPaperTileMap* TileMap;
 	UPROPERTY(EditAnywhere, Category = "TileMap")

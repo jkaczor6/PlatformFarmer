@@ -6,8 +6,8 @@
 #include "Enums.h"
 #include "Plant.h"
 #include "Bed.h"
-#include "DayNightCycleManager.h"
 #include "PlayerHUDWidget.h"
+#include "DayNightCycleManager.h"
 
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
@@ -87,6 +87,7 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Plants")
 	TMap<ESeeds, TSubclassOf<APlant>> PlantClasses;
 	TMap<FIntPoint, APlant*> PlantedTiles;
+	TArray<FIntPoint> WateredTiles;
 	
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AnimSequences")

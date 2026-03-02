@@ -245,6 +245,8 @@ void APlayerCharacter::UseWater()
 	{
 		ChangeTile(Tile.X, Tile.Y, WaterTileSet, 2, 1);
 	}
+	FIntPoint WateredTile = FIntPoint(Tile.X, Tile.Y);
+	WateredTiles.Add(WateredTile);
 }
 
 void APlayerCharacter::UseSeed()
