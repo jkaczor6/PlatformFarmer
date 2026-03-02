@@ -24,6 +24,7 @@ void APlant::BeginPlay()
 void APlant::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
 }
 
 void APlant::SetupPlant(ESeeds SeedType)
@@ -67,8 +68,7 @@ void APlant::CheckIfIsWatered()
 	OutTileY += 1;
 
 	FVector2D Tile = FVector2D(OutTileX, OutTileY);
-
-	FPaperTileInfo TileToCheck = TileMapActor->GetRenderComponent()->GetTile(Tile.X, Tile.Y - 16, 3);
+	FPaperTileInfo TileToCheck = TileMapActor->GetRenderComponent()->GetTile(Tile.X, Tile.Y, 1);
 	if (TileToCheck.PackedTileIndex == 1)
 	{
 		IsWatered = true;
@@ -77,13 +77,18 @@ void APlant::CheckIfIsWatered()
 
 void APlant::Grow()
 {
-	CurrentGrowthStage++;
-	if (CurrentGrowthStage < GrowthStages)
+	CheckIfIsWatered();
+
+	if (IsWatered)
 	{
-		PlantSprite->SetSprite(PlantGrowthSprites[CurrentGrowthStage]);
-	}
-	else
-	{
-		CurrentGrowthStage = GrowthStages;
+		CurrentGrowthStage++;
+		if (CurrentGrowthStage <= GrowthStages)
+		{
+			PlantSprite->SetSprite(PlantGrowthSprites[CurrentGrowthStage]);
+		}
+		else
+		{
+			CurrentGrowthStage = GrowthStages;
+		}
 	}
 }

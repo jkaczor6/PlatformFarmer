@@ -21,7 +21,6 @@ void ADayNightCycleManager::BeginPlay()
 	}
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ATree::StaticClass(), Trees);
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASlime::StaticClass(), Slimes);
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), APlant::StaticClass(), Plants);
 
 	Sleep();
 }
@@ -102,6 +101,7 @@ void ADayNightCycleManager::Sleep()
 			Slime->Respawn();
 		}
 	}
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), APlant::StaticClass(), Plants);
 	for (AActor* PlantActor : Plants)
 	{
 		APlant* Plant = Cast<APlant>(PlantActor);
