@@ -314,3 +314,22 @@ void APlayerCharacter::UpdateDirection(float MoveDirection)
 		}
 	}
 }
+
+void APlayerCharacter::Die()
+{
+	IsAlive = false;
+	CanMove = false;
+	CanUse = false;
+
+	GetWorldTimerManager().SetTimer(PlayerDiedTimer, this, &APlayerCharacter::OnPlayerDiedTimerTimeout, 1.0f, false, 2.5f);
+}
+
+void APlayerCharacter::OnPlayerDiedTimerTimeout()
+{
+	DayNightCycleManager->Sleep();
+	SetActorLocation(Bed->GetActorLocation());
+
+	IsAlive = true;
+	CanMove = true;
+	CanUse = true;
+}

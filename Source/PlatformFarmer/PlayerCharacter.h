@@ -18,6 +18,7 @@
 #include "InputActionValue.h"
 #include "GameFramework/Controller.h"
 #include "Components/BoxComponent.h"
+#include "Components/CapsuleComponent.h"
 
 #include "PaperTileMap.h"
 #include "PaperTileMapActor.h"
@@ -31,6 +32,8 @@
 #include "Kismet/KismetMathLibrary.h"
 
 #include "PaperZDAnimInstance.h"
+
+#include "Engine/TimerHandle.h"
 
 #include "PlayerCharacter.generated.h"
 
@@ -109,6 +112,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Equipment")
 	TMap<EItems, int32> Materials;
 
+	UPROPERTY(BlueprintReadOnly)
 	bool IsAlive = true;
 	bool CanMove = true;
 	bool CanUse = true;
@@ -117,6 +121,8 @@ public:
 	FRotator CurrentRotation;
 	ABed* Bed;
 	ADayNightCycleManager* DayNightCycleManager;
+	FTimerHandle PlayerDiedTimer;
+
 
 	APlayerCharacter();
 	virtual void BeginPlay() override;
@@ -142,4 +148,6 @@ public:
 	void UseSeed();
 	void ChangeTile(int32 X, int32 Y, UPaperTileSet* CorrectTileSet, int32 NewTileIndex, int32 LayerIndex);
 	void AddToEquipment(EItems Material, int32 Amount);
+	void Die();
+	void OnPlayerDiedTimerTimeout();
 };

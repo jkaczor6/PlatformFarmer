@@ -32,6 +32,8 @@ public:
 	UBoxComponent* WallDetector;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	UBoxComponent* LedgeDetector;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	UCapsuleComponent* PlayerChecker;
 
 	UCapsuleComponent* CapsuleComp;
 	UPaperFlipbookComponent* Flipbook;
