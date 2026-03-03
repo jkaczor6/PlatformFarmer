@@ -29,6 +29,8 @@ public:
 	void SetupPlant(ESeeds SeedType);
 	void Grow();
 	void CheckIfIsWatered();
+	UFUNCTION()
+	void OverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	UCapsuleComponent* CapsuleComp;
@@ -48,6 +50,8 @@ public:
 	EItems Reward;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	bool IsWatered = false;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	bool IsFullyGrown = false;
 
 	int32 DeathCount = 0;
 

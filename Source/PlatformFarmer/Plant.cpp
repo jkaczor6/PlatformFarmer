@@ -1,6 +1,8 @@
 #include "Plant.h"
 
 #include "Kismet/GameplayStatics.h"
+#include "PlayerCharacter.h"
+#include "Kismet/KismetMathLibrary.h"
 
 APlant::APlant()
 {
@@ -19,12 +21,17 @@ void APlant::BeginPlay()
 	
 	TileMapActor = Cast<APaperTileMapActor>(UGameplayStatics::GetActorOfClass(GetWorld(), APaperTileMapActor::StaticClass()));
 	
+	CapsuleComp->OnComponentBeginOverlap.AddDynamic(this, &APlant::OverlapBegin);
 }
 
 void APlant::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (CurrentGrowthStage == GrowthStages)
+	{
+		IsFullyGrown = true;
+	}
 }
 
 void APlant::SetupPlant(ESeeds SeedType)
@@ -102,5 +109,19 @@ void APlant::Grow()
 	if (DeathCount >= 3)
 	{
 		Destroy();
+	}
+}
+
+void APlant::OverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (IsFullyGrown)
+	{
+		APlayerCharacter* Player = Cast<APlayerCharacter>(OtherActor);
+		if (Player)
+		{
+			Destroy();
+			int32 HarvestedPlant = UKismetMathLibrary::RandomIntegerInRange(1, 4);
+			Player->AddToEquipment(Reward, HarvestedPlant);
+		}
 	}
 }

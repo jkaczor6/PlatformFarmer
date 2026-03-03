@@ -18,13 +18,18 @@ void UPlayerHUDWidget::SetMaterialCount(EItems item, int32 Amount)
 	{
 		case EItems::Carrot:
 			CarrotCountText->SetText(FText::FromString(Str));
+			break;
 		case EItems::Pumpkin:
 			PumpkinCountText->SetText(FText::FromString(Str));
+			break;
 		case EItems::Tomato:
 			TomatoCountText->SetText(FText::FromString(Str));
+			break;
 		case EItems::Wheat:
 			WheatCountText->SetText(FText::FromString(Str));
+			break;
 		case EItems::Wood:
 			WoodCountText->SetText(FText::FromString(Str));
+			break;
 	}
 }
