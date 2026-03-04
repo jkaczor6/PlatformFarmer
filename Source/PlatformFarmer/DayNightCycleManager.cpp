@@ -23,7 +23,8 @@ void ADayNightCycleManager::BeginPlay()
 	}
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ATree::StaticClass(), Trees);
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASlime::StaticClass(), Slimes);
-
+	WeatherSystemManager = Cast<AWeatherSystemManager>(UGameplayStatics::GetActorOfClass(GetWorld(), AWeatherSystemManager::StaticClass()));
+	
 	Sleep();
 }
 
@@ -117,4 +118,7 @@ void ADayNightCycleManager::Sleep()
 	{
 		Player->ChangeTile(WateredTile.X, WateredTile.Y, Player->WaterTileSet, -1, 1);
 	}
+	
+	WeatherSystemManager->SetWeather();
+	WeatherSystemManager->SetNextWeather();
 }

@@ -8,6 +8,8 @@
 #include "PaperFlipbook.h"
 #include "PaperSpriteComponent.h"
 
+#include "Enums.h"
+
 #include "TV.generated.h"
 
 UCLASS()
@@ -25,6 +27,7 @@ public:
 	void OnComponentOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 	UFUNCTION()
 	void OnComponentOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+	void ShowForecast();
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	UBoxComponent* BoxComp;
@@ -38,4 +41,6 @@ public:
 	UPaperFlipbook* SunnyWeatherFlipbook;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	UPaperFlipbook* RainyWeatherFlipbook;
+	
+	bool PlayerOverlapping = false;
 };

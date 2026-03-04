@@ -33,3 +33,11 @@ enum class EItems : uint8
 	Wheat,
 	Wood
 };
+
+UENUM(BlueprintType)
+enum class EWeatherType : uint8
+{
+	Sunny,
+	Rainy,
+	COUNT
+};

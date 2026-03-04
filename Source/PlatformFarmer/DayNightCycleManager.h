@@ -14,6 +14,7 @@
 #include "Tree.h"
 #include "Slime.h"
 #include "Plant.h"
+#include "WeatherSystemManager.h"
 
 #include "DayNightCycleManager.generated.h"
 
@@ -53,6 +54,8 @@ public:
 	TArray<AActor*> Trees;
 	TArray<AActor*> Slimes;
 	TArray<AActor*> Plants;
+	AWeatherSystemManager* WeatherSystemManager;
+	
 
 	float CurrentTime;
 };

@@ -6,6 +6,7 @@
 #include "Enums.h"
 #include "Plant.h"
 #include "Bed.h"
+#include "TV.h"
 #include "PlayerHUDWidget.h"
 #include "DayNightCycleManager.h"
 
@@ -120,6 +121,7 @@ public:
 	FZDOnAnimationOverrideEndSignature OnUseOverrideEndDelegate;
 	FRotator CurrentRotation;
 	ABed* Bed;
+	ATV* TV;
 	ADayNightCycleManager* DayNightCycleManager;
 	FTimerHandle PlayerDiedTimer;
 

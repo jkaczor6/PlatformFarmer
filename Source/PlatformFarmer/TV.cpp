@@ -1,5 +1,9 @@
 #include "TV.h"
 
+#include "PlayerCharacter.h"
+#include "WeatherSystemManager.h"
+#include "Kismet/GameplayStatics.h"
+
 ATV::ATV()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -33,14 +37,30 @@ void ATV::Tick(float DeltaTime)
 
 void ATV::OnComponentOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	InteractKeySprite->SetVisibility(true);
-
-	TVFlipbook->SetFlipbook(SunnyWeatherFlipbook);
+	APlayerCharacter* Player = Cast<APlayerCharacter>(OtherActor);
+	if (Player)
+	{
+		InteractKeySprite->SetVisibility(true);
+		PlayerOverlapping = true;
+	}
 }
 
 void ATV::OnComponentOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
 	InteractKeySprite->SetVisibility(false);
-
+	PlayerOverlapping = false;
 	TVFlipbook->SetFlipbook(IdleFlipbook);
+}
+
+void ATV::ShowForecast()
+{
+	AWeatherSystemManager* WeatherSystemManager = Cast<AWeatherSystemManager>(UGameplayStatics::GetActorOfClass(GetWorld(), AWeatherSystemManager::StaticClass()));
+	if (WeatherSystemManager->GetNextWeatherType() == EWeatherType::Rainy)
+	{
+		TVFlipbook->SetFlipbook(RainyWeatherFlipbook);
+	}
+	else
+	{
+		TVFlipbook->SetFlipbook(SunnyWeatherFlipbook);
+	}
 }

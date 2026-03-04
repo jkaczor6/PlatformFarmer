@@ -35,6 +35,7 @@ void APlayerCharacter::BeginPlay()
 
 	TileMapActor = Cast<APaperTileMapActor>(UGameplayStatics::GetActorOfClass(GetWorld(), APaperTileMapActor::StaticClass()));
 	Bed = Cast<ABed>(UGameplayStatics::GetActorOfClass(GetWorld(), ABed::StaticClass()));
+	TV = Cast<ATV>(UGameplayStatics::GetActorOfClass(GetWorld(), ATV::StaticClass()));
 	DayNightCycleManager = Cast<ADayNightCycleManager>(UGameplayStatics::GetActorOfClass(GetWorld(), ADayNightCycleManager::StaticClass()));
 
 	if (TileMapActor)
@@ -157,6 +158,10 @@ void APlayerCharacter::Use(const FInputActionValue& Value)
 	if (Bed->PlayerOverlapping)
 	{
 		DayNightCycleManager->Sleep();
+	}
+	if (TV->PlayerOverlapping)
+	{
+		TV->ShowForecast();
 	}
 }
 
