@@ -111,7 +111,7 @@ void ADayNightCycleManager::Sleep()
 		APlant* Plant = Cast<APlant>(PlantActor);
 		if (Plant)
 		{
-			 Plant->Grow();
+			Plant->Grow();
 		}
 	}
 	for (FIntPoint WateredTile : Player->WateredTiles)
@@ -121,4 +121,9 @@ void ADayNightCycleManager::Sleep()
 	
 	WeatherSystemManager->SetWeather();
 	WeatherSystemManager->SetNextWeather();
+	
+	if (WeatherSystemManager->CurrentWeatherType == EWeatherType::Rainy)
+	{
+		Player->WaterAllHoedTiles();	
+	}
 }

@@ -92,6 +92,7 @@ public:
 	TMap<ESeeds, TSubclassOf<APlant>> PlantClasses;
 	TMap<FIntPoint, APlant*> PlantedTiles;
 	TArray<FIntPoint> WateredTiles;
+	TArray<FIntPoint> HoedTiles;
 	
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AnimSequences")
@@ -152,4 +153,5 @@ public:
 	void AddToEquipment(EItems Material, int32 Amount);
 	void Die();
 	void OnPlayerDiedTimerTimeout();
+	void WaterAllHoedTiles();
 };

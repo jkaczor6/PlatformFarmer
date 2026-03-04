@@ -231,6 +231,8 @@ void APlayerCharacter::UseHoe()
 	{
 		ChangeTile(Tile.X, Tile.Y, GroundTileSet, 50, 2);
 	}
+	FIntPoint HoedTile = FIntPoint(Tile.X, Tile.Y);
+	HoedTiles.Add(HoedTile);
 }
 
 void APlayerCharacter::UseWater()
@@ -337,4 +339,26 @@ void APlayerCharacter::OnPlayerDiedTimerTimeout()
 	IsAlive = true;
 	CanMove = true;
 	CanUse = true;
+}
+
+void APlayerCharacter::WaterAllHoedTiles()
+{
+	for (FIntPoint Tile : HoedTiles)
+	{
+		FPaperTileInfo TileToBeWatered = TileMapActor->GetRenderComponent()->GetTile(Tile.X, Tile.Y, 2);
+		if (TileToBeWatered.PackedTileIndex == 48)
+		{
+			ChangeTile(Tile.X, Tile.Y, WaterTileSet, 0, 1);
+		}
+		else if (TileToBeWatered.PackedTileIndex == 49)
+		{
+			ChangeTile(Tile.X, Tile.Y, WaterTileSet, 1, 1);
+		}
+		else if (TileToBeWatered.PackedTileIndex == 50)
+		{
+			ChangeTile(Tile.X, Tile.Y, WaterTileSet, 2, 1);
+		}
+		FIntPoint WateredTile = FIntPoint(Tile.X, Tile.Y);
+		WateredTiles.Add(WateredTile);
+	}
 }
