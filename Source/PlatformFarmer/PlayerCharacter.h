@@ -9,6 +9,8 @@
 #include "TV.h"
 #include "PlayerHUDWidget.h"
 #include "DayNightCycleManager.h"
+#include "ShopKeeper.h"
+#include "ShopHUD.h"
 
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
@@ -82,6 +84,10 @@ public:
 	TSubclassOf<UPlayerHUDWidget> PlayerHUDWidgetClass;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "HUD")
 	UPlayerHUDWidget* PlayerHUDWidget;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "HUD")
+	TSubclassOf<UShopHUD> ShopHUDWidgetClass;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "HUD")
+	UShopHUD* ShopHUDWidget;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Enums")
 	ETools CurrentTool = ETools::Axe;
@@ -124,6 +130,8 @@ public:
 	ABed* Bed;
 	ATV* TV;
 	ADayNightCycleManager* DayNightCycleManager;
+	AShopKeeper* UpgradeShopKeeper;
+	AShopKeeper* KeyShopKeeper;
 	FTimerHandle PlayerDiedTimer;
 
 
@@ -154,4 +162,7 @@ public:
 	void Die();
 	void OnPlayerDiedTimerTimeout();
 	void WaterAllHoedTiles();
+	void OpenShop(EShopType Type, FString Name, TMap<EItems, int32> Price, EShopItem Reward);
+	UFUNCTION()
+	void CloseShop();
 };

@@ -37,6 +37,14 @@ void APlayerCharacter::BeginPlay()
 	Bed = Cast<ABed>(UGameplayStatics::GetActorOfClass(GetWorld(), ABed::StaticClass()));
 	TV = Cast<ATV>(UGameplayStatics::GetActorOfClass(GetWorld(), ATV::StaticClass()));
 	DayNightCycleManager = Cast<ADayNightCycleManager>(UGameplayStatics::GetActorOfClass(GetWorld(), ADayNightCycleManager::StaticClass()));
+	
+	TArray<AActor*> UpgradeShops;
+	UGameplayStatics::GetAllActorsWithTag(GetWorld(), FName("UpgradeShop"), UpgradeShops);
+	UpgradeShopKeeper = Cast<AShopKeeper>(UpgradeShops[0]);
+	
+	TArray<AActor*> KeyShops;
+	UGameplayStatics::GetAllActorsWithTag(GetWorld(), FName("KeyShop"), KeyShops);
+	KeyShopKeeper = Cast<AShopKeeper>(KeyShops[0]);
 
 	if (TileMapActor)
 	{
@@ -162,6 +170,14 @@ void APlayerCharacter::Use(const FInputActionValue& Value)
 	if (TV->PlayerOverlapping)
 	{
 		TV->ShowForecast();
+	}
+	if (UpgradeShopKeeper->PlayerOverlapping)
+	{
+		OpenShop(UpgradeShopKeeper->ShopType, UpgradeShopKeeper->ItemName, UpgradeShopKeeper->ItemPrice, UpgradeShopKeeper->ItemReward);
+	}
+	if (KeyShopKeeper->PlayerOverlapping)
+	{
+		OpenShop(KeyShopKeeper->ShopType, KeyShopKeeper->ItemName, KeyShopKeeper->ItemPrice, KeyShopKeeper->ItemReward);
 	}
 }
 
@@ -360,5 +376,36 @@ void APlayerCharacter::WaterAllHoedTiles()
 		}
 		FIntPoint WateredTile = FIntPoint(Tile.X, Tile.Y);
 		WateredTiles.Add(WateredTile);
+	}
+}
+
+void APlayerCharacter::OpenShop(EShopType Type, FString Name, TMap<EItems, int32> Price, EShopItem Reward)
+{
+	
+	if (APlayerController* PlayerController = Cast<APlayerController>(Controller))
+	{
+		ShopHUDWidget = CreateWidget<UShopHUD>(PlayerController, ShopHUDWidgetClass);
+		if (ShopHUDWidget)
+		{
+			ShopHUDWidget->AddToPlayerScreen();
+			ShopHUDWidget->SetupWidget(Type, Name, Price, Reward);
+			ShopHUDWidget->OnShopExitDelegate.AddDynamic(this, &APlayerCharacter::CloseShop);
+		}
+		PlayerController->SetShowMouseCursor(true);
+		
+		FInputModeUIOnly Mode;
+		Mode.SetWidgetToFocus(ShopHUDWidget->TakeWidget());
+		PlayerController->SetInputMode(Mode);
+	}
+}
+
+void APlayerCharacter::CloseShop()
+{
+	if (APlayerController* PlayerController = Cast<APlayerController>(Controller))
+	{
+		PlayerController->SetShowMouseCursor(false);
+		
+		FInputModeGameOnly Mode;
+		PlayerController->SetInputMode(Mode);
 	}
 }

@@ -41,3 +41,17 @@ enum class EWeatherType : uint8
 	Rainy,
 	COUNT
 };
+
+UENUM(BlueprintType)
+enum class EShopType: uint8
+{
+	Upgrade,
+	Key
+};
+
+UENUM(BlueprintType)
+enum class EShopItem: uint8
+{
+	DoubleJumpUpgrade,
+	DoorKey
+};
