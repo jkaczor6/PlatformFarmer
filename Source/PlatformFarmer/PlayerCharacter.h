@@ -124,6 +124,7 @@ public:
 	bool IsAlive = true;
 	bool CanMove = true;
 	bool CanUse = true;
+	bool HasDoorKey = false;
 
 	FZDOnAnimationOverrideEndSignature OnUseOverrideEndDelegate;
 	FRotator CurrentRotation;
@@ -159,10 +160,13 @@ public:
 	void UseSeed();
 	void ChangeTile(int32 X, int32 Y, UPaperTileSet* CorrectTileSet, int32 NewTileIndex, int32 LayerIndex);
 	void AddToEquipment(EItems Material, int32 Amount);
+	void RemoveFromEquipment(EItems Material, int32 Amount);
 	void Die();
 	void OnPlayerDiedTimerTimeout();
 	void WaterAllHoedTiles();
-	void OpenShop(EShopType Type, FString Name, TMap<EItems, int32> Price, EShopItem Reward);
+	void OpenShop(EShopType Type, FString Name, TArray<int32> Prices, TArray<UTexture2D*> Sprites, EShopItem Reward, TArray<EItems> Items);
 	UFUNCTION()
 	void CloseShop();
+	UFUNCTION()
+	void AddPurchasedItem(EShopItem PurchasedItem);
 };

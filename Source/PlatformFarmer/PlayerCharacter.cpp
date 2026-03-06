@@ -173,11 +173,11 @@ void APlayerCharacter::Use(const FInputActionValue& Value)
 	}
 	if (UpgradeShopKeeper->PlayerOverlapping)
 	{
-		OpenShop(UpgradeShopKeeper->ShopType, UpgradeShopKeeper->ItemName, UpgradeShopKeeper->ItemPrice, UpgradeShopKeeper->ItemReward);
+		OpenShop(UpgradeShopKeeper->ShopType, UpgradeShopKeeper->ItemName, UpgradeShopKeeper->ItemPrice, UpgradeShopKeeper->ItemSprites, UpgradeShopKeeper->ItemReward, UpgradeShopKeeper->Items);
 	}
 	if (KeyShopKeeper->PlayerOverlapping)
 	{
-		OpenShop(KeyShopKeeper->ShopType, KeyShopKeeper->ItemName, KeyShopKeeper->ItemPrice, KeyShopKeeper->ItemReward);
+		OpenShop(KeyShopKeeper->ShopType, KeyShopKeeper->ItemName, KeyShopKeeper->ItemPrice, KeyShopKeeper->ItemSprites, KeyShopKeeper->ItemReward, KeyShopKeeper->Items);
 	}
 }
 
@@ -318,6 +318,12 @@ void APlayerCharacter::AddToEquipment(EItems Material, int32 Amount)
 	PlayerHUDWidget->SetMaterialCount(Material, Materials[Material]);
 }
 
+void APlayerCharacter::RemoveFromEquipment(EItems Material, int32 Amount)
+{
+	Materials[Material] -= Amount;
+	PlayerHUDWidget->SetMaterialCount(Material, Materials[Material]);
+}
+
 void APlayerCharacter::UpdateDirection(float MoveDirection)
 {
 	CurrentRotation = Controller->GetControlRotation();
@@ -379,7 +385,7 @@ void APlayerCharacter::WaterAllHoedTiles()
 	}
 }
 
-void APlayerCharacter::OpenShop(EShopType Type, FString Name, TMap<EItems, int32> Price, EShopItem Reward)
+void APlayerCharacter::OpenShop(EShopType Type, FString Name, TArray<int32> Prices, TArray<UTexture2D*> Sprites, EShopItem Reward, TArray<EItems> Items)
 {
 	
 	if (APlayerController* PlayerController = Cast<APlayerController>(Controller))
@@ -388,7 +394,7 @@ void APlayerCharacter::OpenShop(EShopType Type, FString Name, TMap<EItems, int32
 		if (ShopHUDWidget)
 		{
 			ShopHUDWidget->AddToPlayerScreen();
-			ShopHUDWidget->SetupWidget(Type, Name, Price, Reward);
+			ShopHUDWidget->SetupWidget(Type, Name, Prices, Sprites, Reward, Items);
 			ShopHUDWidget->OnShopExitDelegate.AddDynamic(this, &APlayerCharacter::CloseShop);
 		}
 		PlayerController->SetShowMouseCursor(true);
@@ -407,5 +413,21 @@ void APlayerCharacter::CloseShop()
 		
 		FInputModeGameOnly Mode;
 		PlayerController->SetInputMode(Mode);
+	}
+}
+
+void APlayerCharacter::AddPurchasedItem(EShopItem PurchasedItem)
+{
+	if (PurchasedItem == EShopItem::DoubleJumpUpgrade)
+	{
+		JumpMaxCount = 2;
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::Printf(TEXT("Purchased Double Jump")));
+		UpgradeShopKeeper->Destroy();
+	}
+	else
+	{
+		HasDoorKey = true;
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::Printf(TEXT("Purchased Door Key")));
+		KeyShopKeeper->Destroy();
 	}
 }

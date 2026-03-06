@@ -5,6 +5,7 @@
 
 #include "PaperFlipbookComponent.h"
 #include "Components/BoxComponent.h"
+#include "Engine/Texture2D.h"
 #include "PaperSpriteComponent.h"
 #include "Enums.h"
 
@@ -41,7 +42,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FString ItemName;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	TMap<EItems, int32> ItemPrice;
+	TArray<int32> ItemPrice;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TArray<UTexture2D*> ItemSprites;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	EShopItem ItemReward;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TArray<EItems> Items;
 };
