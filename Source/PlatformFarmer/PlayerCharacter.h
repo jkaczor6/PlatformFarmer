@@ -43,6 +43,7 @@
 #include "PlayerCharacter.generated.h"
 
 #define ECC_Tree ECC_GameTraceChannel1
+#define ECC_Enemy ECC_GameTraceChannel2
 
 UCLASS()
 class PLATFORMFARMER_API APlayerCharacter : public APaperZDCharacter

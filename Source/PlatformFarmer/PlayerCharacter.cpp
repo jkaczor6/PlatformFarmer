@@ -148,7 +148,7 @@ void APlayerCharacter::UseTool(const FInputActionValue& Value)
 			break;
 		case ETools::Sword:
 			AnimToPlay = SwordAnimSequence;
-			HitBox->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
+			HitBox->SetCollisionResponseToChannel(ECC_Enemy, ECollisionResponse::ECR_Overlap);
 			break;
 		case ETools::Water:
 			AnimToPlay = WaterAnimSequence;
