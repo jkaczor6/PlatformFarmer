@@ -37,5 +37,7 @@ public:
 
 	UCapsuleComponent* CapsuleComp;
 	UPaperFlipbookComponent* Flipbook;
+	
+	bool IsAlive = true;
 
 };

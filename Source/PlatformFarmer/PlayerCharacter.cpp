@@ -217,7 +217,7 @@ void APlayerCharacter::OnUseOverrideAnimEnd(bool Completed)
 		CanUse = true;
 	}
 	
-	HitBox->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
+	HitBox->SetCollisionResponseToChannel(ECC_Enemy, ECollisionResponse::ECR_Ignore);
 	HitBox->SetCollisionResponseToChannel(ECC_Tree, ECollisionResponse::ECR_Ignore);
 }
 
