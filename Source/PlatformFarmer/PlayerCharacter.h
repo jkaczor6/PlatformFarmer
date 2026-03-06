@@ -8,6 +8,7 @@
 #include "Bed.h"
 #include "TV.h"
 #include "Door.h"
+#include "WinCrown.h"
 #include "PlayerHUDWidget.h"
 #include "DayNightCycleManager.h"
 #include "ShopKeeper.h"
@@ -132,6 +133,7 @@ public:
 	ABed* Bed;
 	ATV* TV;
 	ADoor* Door;
+	AWinCrown* Crown;
 	ADayNightCycleManager* DayNightCycleManager;
 	AShopKeeper* UpgradeShopKeeper;
 	AShopKeeper* KeyShopKeeper;

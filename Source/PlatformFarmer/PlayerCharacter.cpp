@@ -37,6 +37,7 @@ void APlayerCharacter::BeginPlay()
 	Bed = Cast<ABed>(UGameplayStatics::GetActorOfClass(GetWorld(), ABed::StaticClass()));
 	TV = Cast<ATV>(UGameplayStatics::GetActorOfClass(GetWorld(), ATV::StaticClass()));
 	Door = Cast<ADoor>(UGameplayStatics::GetActorOfClass(GetWorld(), ADoor::StaticClass()));
+	Crown = Cast<AWinCrown>(UGameplayStatics::GetActorOfClass(GetWorld(), AWinCrown::StaticClass()));
 	DayNightCycleManager = Cast<ADayNightCycleManager>(UGameplayStatics::GetActorOfClass(GetWorld(), ADayNightCycleManager::StaticClass()));
 	
 	TArray<AActor*> UpgradeShops;
@@ -183,6 +184,10 @@ void APlayerCharacter::Use(const FInputActionValue& Value)
 	if (Door->PlayerOverlapping && HasDoorKey)
 	{
 		Door->Destroy();	
+	}
+	if (Crown->PlayerOverlapping)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Game Won!"));
 	}
 }
 
