@@ -50,7 +50,6 @@ void UShopHUD::Purchase()
 			Player->Materials[ItemsEnums[1]] >= ItemPrices[2] && 
 			Player->Materials[ItemsEnums[2]] >= ItemPrices[2])
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::Printf(TEXT("Player has enough materials")));
 			Player->RemoveFromEquipment(ItemsEnums[0], ItemPrices[0]);
 			Player->RemoveFromEquipment(ItemsEnums[1], ItemPrices[1]);
 			Player->RemoveFromEquipment(ItemsEnums[2], ItemPrices[2]);
@@ -58,10 +57,6 @@ void UShopHUD::Purchase()
 			Player->AddPurchasedItem(PurchaseItem);
 			
 			ExitShop();
-		}
-		else
-		{
-			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::Printf(TEXT("Not enough materials")));
 		}
 	}
 }

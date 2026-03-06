@@ -13,6 +13,7 @@
 #include "DayNightCycleManager.h"
 #include "ShopKeeper.h"
 #include "ShopHUD.h"
+#include "WinMenuWidget.h"
 
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
@@ -91,6 +92,10 @@ public:
 	TSubclassOf<UShopHUD> ShopHUDWidgetClass;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "HUD")
 	UShopHUD* ShopHUDWidget;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "HUD")
+	TSubclassOf<UWinMenuWidget> WinMenuWidgetClass;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "HUD")
+	UWinMenuWidget* WinMenuWidget;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Enums")
 	ETools CurrentTool = ETools::Axe;

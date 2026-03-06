@@ -58,6 +58,13 @@ void APlayerCharacter::BeginPlay()
 	{
 		PlayerHUDWidget->AddToPlayerScreen();
 	}
+	WinMenuWidget = CreateWidget<UWinMenuWidget>(UGameplayStatics::GetPlayerController(GetWorld(), 0), WinMenuWidgetClass);
+	if (WinMenuWidget)
+	{
+		WinMenuWidget->AddToPlayerScreen();
+		WinMenuWidget->SetVisibility(ESlateVisibility::Hidden);
+		WinMenuWidget->SetupWidget();
+	}
 }
 
 void APlayerCharacter::Tick(float DeltaTime)
@@ -187,7 +194,13 @@ void APlayerCharacter::Use(const FInputActionValue& Value)
 	}
 	if (Crown->PlayerOverlapping)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Game Won!"));
+		WinMenuWidget->SetVisibility(ESlateVisibility::Visible);
+		
+		APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+		PC->SetShowMouseCursor(true);
+		FInputModeUIOnly Mode;
+		Mode.SetWidgetToFocus(WinMenuWidget->TakeWidget());
+		PC->SetInputMode(Mode);
 	}
 }
 
@@ -431,13 +444,11 @@ void APlayerCharacter::AddPurchasedItem(EShopItem PurchasedItem)
 	if (PurchasedItem == EShopItem::DoubleJumpUpgrade)
 	{
 		JumpMaxCount = 2;
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::Printf(TEXT("Purchased Double Jump")));
 		UpgradeShopKeeper->Destroy();
 	}
 	else
 	{
 		HasDoorKey = true;
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::Printf(TEXT("Purchased Door Key")));
 		KeyShopKeeper->Destroy();
 	}
 }
