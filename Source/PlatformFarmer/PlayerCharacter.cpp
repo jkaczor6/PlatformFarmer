@@ -36,6 +36,7 @@ void APlayerCharacter::BeginPlay()
 	TileMapActor = Cast<APaperTileMapActor>(UGameplayStatics::GetActorOfClass(GetWorld(), APaperTileMapActor::StaticClass()));
 	Bed = Cast<ABed>(UGameplayStatics::GetActorOfClass(GetWorld(), ABed::StaticClass()));
 	TV = Cast<ATV>(UGameplayStatics::GetActorOfClass(GetWorld(), ATV::StaticClass()));
+	Door = Cast<ADoor>(UGameplayStatics::GetActorOfClass(GetWorld(), ADoor::StaticClass()));
 	DayNightCycleManager = Cast<ADayNightCycleManager>(UGameplayStatics::GetActorOfClass(GetWorld(), ADayNightCycleManager::StaticClass()));
 	
 	TArray<AActor*> UpgradeShops;
@@ -178,6 +179,10 @@ void APlayerCharacter::Use(const FInputActionValue& Value)
 	if (KeyShopKeeper->PlayerOverlapping)
 	{
 		OpenShop(KeyShopKeeper->ShopType, KeyShopKeeper->ItemName, KeyShopKeeper->ItemPrice, KeyShopKeeper->ItemSprites, KeyShopKeeper->ItemReward, KeyShopKeeper->Items);
+	}
+	if (Door->PlayerOverlapping && HasDoorKey)
+	{
+		Door->Destroy();	
 	}
 }
 

@@ -7,6 +7,7 @@
 #include "Plant.h"
 #include "Bed.h"
 #include "TV.h"
+#include "Door.h"
 #include "PlayerHUDWidget.h"
 #include "DayNightCycleManager.h"
 #include "ShopKeeper.h"
@@ -130,6 +131,7 @@ public:
 	FRotator CurrentRotation;
 	ABed* Bed;
 	ATV* TV;
+	ADoor* Door;
 	ADayNightCycleManager* DayNightCycleManager;
 	AShopKeeper* UpgradeShopKeeper;
 	AShopKeeper* KeyShopKeeper;
