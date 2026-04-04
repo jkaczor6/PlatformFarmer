@@ -34,7 +34,7 @@ are no shortcuts.
 
 ## 🕹️ Play / Download
 
-[![Download on itch.io](https://img.shields.io/badge/Download-itch.io-FA5C5C?style=for-the-badge&logo=itch.io&logoColor=white)](https://jkaczor6.itch.io/platform-farmer)
+[![Download on itch.io](https://img.shields.io/badge/Download-itch.io-FA5C5C?style=for-the-badge&logo=itch.io&logoColor=white)](https://jkaczor6.itch.io/platformfarmer)
 
 > Windows build. No installation required — unzip and run `PlatformFarmer.exe`.
 
