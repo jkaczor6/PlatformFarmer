@@ -64,12 +64,6 @@ git clone https://github.com/jkaczor6/PlatformFarmer.git
 
 ---
 
-## 📄 License
-
-This project is open source and available under the [MIT License](LICENSE).
-
----
-
 ## 👤 Author
 
 **Jakub Kaczor** — [Portfolio](https://jkaczor6.github.io/portfolio) · [GitHub](https://github.com/jkaczor6)
